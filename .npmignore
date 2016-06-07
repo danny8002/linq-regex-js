@@ -1,0 +1,17 @@
+# git #
+.git*
+.vscode
+.tscache
+
+# Node #
+node_modules/
+coverage/
+
+# TypeScript files #
+*.ts
+*.js.map
+
+# Test #
+test/
+
+gruntfile.js

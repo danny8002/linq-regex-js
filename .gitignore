@@ -1,0 +1,15 @@
+obj
+objd
+
+node_modules
+coverage
+docs
+.vscode
+.idea
+.vs
+.tscache
+.ntvs_analysis.dat
+*.js.map
+
+!test/*
+!*-tests.js

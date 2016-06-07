@@ -1,0 +1,39 @@
+{
+  "name": "linq-regex",
+  "version": "1.0.0",
+  "description": "Write readable, beautifull, maintainable unstructured string parser with regex",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danny8002/linq-regex-js.git"
+  },
+  "keywords": [
+    "regex",
+    "linq",
+    "parser",
+    "string",
+    "unstructured"
+  ],
+  "author": "Zhiyuan Wang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/danny8002/linq-regex-js/issues"
+  },
+  "homepage": "https://github.com/danny8002/linq-regex-js#readme",
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-cli": "^1.1.0",
+    "grunt-ts": "~5.5.0-beta.2",
+    "grunt-mocha-test": "^0.12.7",
+    "grunt-mocha": "^1.0.2",
+    "grunt-jsdoc": "~0.5.1",
+    "typescript": "~1.8.9",
+    "coveralls": "^2.11.4",
+    "istanbul": "^0.3.22"
+  },
+  "scripts": {
+    "test": "mocha --no-timeouts --recursive test",
+    "cover": "istanbul cover ./node_modules/mocha/bin/_mocha -- -R spec -u bdd --no-timeouts --recursive test",
+    "coveralls": "npm run cover && cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls.js"
+  }
+}

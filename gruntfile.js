@@ -6,6 +6,7 @@ module.exports = function (grunt) {
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
+        cfg: grunt.file.readJSON('jsconfig.json'),
 
         mochaTest: {
             test: {
@@ -25,7 +26,9 @@ module.exports = function (grunt) {
             dist: {
                 src: [
                     "README.md",
-                    "lib/ParseData.js"
+                    "lib/ParseData.js",
+                    "lib/ParseErrorData.js",
+                    "lib/ParserGenerator.js"
                 ],
                 options: {
                     destination: 'docs',

@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "target": "ES5"
+    },
+    "files": [
+        "lib/ParseData.js",
+        "lib/ParseErrorData.js",
+        "lib/ParserGenerator.js"
+    ]
+}

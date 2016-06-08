@@ -4,7 +4,6 @@ objd
 node_modules
 coverage
 docs
-.vscode
 .idea
 .vs
 .tscache

@@ -2,31 +2,10 @@
 var fs_ = require("fs");
 var path_ = require("path");
 
-function tsc2Grunt(tsConfig) {
-    var tscOptions = tsConfig.compilerOptions;
-
-    // convert outDir option to Grunt-ts style options
-    var gruntTSC = { options: tscOptions };
-    if (tscOptions.outDir != null) {
-        gruntTSC.files = {};
-        gruntTSC.files[tscOptions.outDir] = tsConfig.files;
-    } else {
-        gruntTSC.src = tsConfig.files;
-    }
-
-    return gruntTSC;
-}
-
 module.exports = function (grunt) {
-
-    grunt.log.debug('Read tsconfig.json from current project directory!');
-    var tsConfig = grunt.file.readJSON('tsconfig.json');
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-        ts: {
-            default: tsc2Grunt(tsConfig)
-        },
 
         mochaTest: {
             test: {

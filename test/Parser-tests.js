@@ -96,7 +96,7 @@ describe("AdvancedParser-many-tests", function () {
     })
 
 
-    it("advanced parser - all - without map", function () {
+    it("advanced parser - many - without map", function () {
         var source = "1234stop";
 
         var parser = lib.Parser.many(digitParser);
@@ -112,6 +112,22 @@ describe("AdvancedParser-many-tests", function () {
         assert_.strictEqual(obj.result[1], "2");
         assert_.strictEqual(obj.result[2], "3");
         assert_.strictEqual(obj.result[3], "4");
+    })
+
+
+    it("advanced parser - many - return empty array", function () {
+        var source = "a1234stop";
+
+        var parser = lib.Parser.many(digitParser);
+
+        assert_.equal(libUtil.isParser(parser), true);
+
+        var obj = parser(source);
+
+        assert_.equal(obj instanceof lib.ParseData, true);
+        assert_.equal(obj.isValid(), true);
+        assert_.equal(obj.rest, source);
+        assert_.strictEqual(obj.result.length, 0);
     })
 })
 

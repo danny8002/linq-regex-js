@@ -9,7 +9,7 @@ function KVClass(k, v) {
     this.value = v;
 }
 
-describe("Parser-tests", function () {
+describe("AdvancedParser-all-tests", function () {
 
     var keyParser;
     var sepParser;
@@ -25,7 +25,7 @@ describe("Parser-tests", function () {
         valueParser = gen.regex("(\[\\S\]+)", valueParserDesc);
     })
 
-    it("advanced parser - all", function () {
+    it("advanced parser - all - with map", function () {
         var source = "name=Microsoft dummy";
 
         var KVClassParser = lib.Parser.all(keyParser, sepParser, valueParser, function map(k, _1, v) {
@@ -51,7 +51,7 @@ describe("Parser-tests", function () {
     })
 
 
-    it("advanced parser - all - no map", function () {
+    it("advanced parser - all - without map", function () {
         var source = "name=Microsoft dummy";
 
         var parser = lib.Parser.all(keyParser, sepParser, valueParser);
@@ -65,5 +65,52 @@ describe("Parser-tests", function () {
         assert_.strictEqual(obj.result[0], "name");
         assert_.strictEqual(obj.result[1], undefined);
         assert_.strictEqual(obj.result[2], "Microsoft");
+    })
+})
+
+
+describe("AdvancedParser-many-tests", function () {
+
+    var digitParser;
+
+    before("new Parser", function () {
+        var gen = new lib.ParserGenerator({ history: [] });
+        digitParser = gen.regex("(\\d)", "digit");
+    })
+
+    it("advanced parser - many - with map", function () {
+        var source = "1234stop";
+
+        var parser = lib.Parser.many(digitParser, function map(digits) {
+            return digits.join("");
+        });
+
+        assert_.equal(libUtil.isParser(parser), true);
+
+        var obj = parser(source);
+
+        assert_.equal(obj instanceof lib.ParseData, true);
+        assert_.equal(obj.isValid(), true);
+        assert_.equal(obj.result, "1234");
+        assert_.equal(obj.rest, "stop");
+    })
+
+
+    it("advanced parser - all - without map", function () {
+        var source = "1234stop";
+
+        var parser = lib.Parser.many(digitParser);
+
+        assert_.equal(libUtil.isParser(parser), true);
+
+        var obj = parser(source);
+
+        assert_.equal(obj instanceof lib.ParseData, true);
+        assert_.equal(obj.isValid(), true);
+        assert_.equal(obj.rest, "stop");
+        assert_.strictEqual(obj.result[0], "1");
+        assert_.strictEqual(obj.result[1], "2");
+        assert_.strictEqual(obj.result[2], "3");
+        assert_.strictEqual(obj.result[3], "4");
     })
 })

@@ -5,6 +5,9 @@
     "files": [
         "lib/ParseData.js",
         "lib/ParseErrorData.js",
-        "lib/ParserGenerator.js"
+        "lib/ParserGenerator.js",
+        "lib/Util.js",
+        "lib/Parser.js",
+        "index.js"
     ]
 }

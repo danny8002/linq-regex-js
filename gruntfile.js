@@ -2,11 +2,12 @@
 var fs_ = require("fs");
 var path_ = require("path");
 
+
 module.exports = function (grunt) {
+    var cfg = grunt.file.readJSON('jsconfig.json');
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-        cfg: grunt.file.readJSON('jsconfig.json'),
 
         mochaTest: {
             test: {
@@ -26,10 +27,8 @@ module.exports = function (grunt) {
             dist: {
                 src: [
                     "README.md",
-                    "lib/ParseData.js",
-                    "lib/ParseErrorData.js",
-                    "lib/ParserGenerator.js"
-                ],
+                ].concat(cfg.files),
+
                 options: {
                     destination: 'docs',
                     configure: 'jsdoc/jsdoc.json'

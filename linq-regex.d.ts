@@ -1,23 +1,34 @@
 declare module "linq-regex" {
-    export abstract class ParserErrorData {
+    export abstract class ParseErrorData {
         constructor(position: number);
         public position: number;
     }
 
-    export class RegexParseErrorData extends ParserErrorData {
+    export class RegexParseErrorData extends ParseErrorData {
         constructor(position: number, pattern: string, description: string);
         public pattern: string;
         public description: string;
     }
 
-    export class NoParseErrorData extends ParserErrorData {
+    export class NoParseErrorData extends ParseErrorData {
         constructor();
     }
 
+    export class AggregateParseErrorData extends ParseErrorData {
+        constructor(position: number, errors: ParseErrorData[]);
+    }
+
+    export class PrematureEndParseErrorData extends ParseErrorData {
+        constructor(position: number);
+    }
+
     export class ParseData<T>{
-        constructor(error: ParserErrorData);
+        constructor(error: ParseErrorData);
         constructor(result: T, rest: string);
 
+        public result: T;
+        public rest: string;
+        public error: ParseErrorData;
         public isValid(): boolean;
     }
 
@@ -34,7 +45,7 @@ declare module "linq-regex" {
     }
 
     export interface ParserGeneratorContext {
-        history: ParserErrorData[];
+        history: ParseErrorData[];
 
         /**
          * log the parse process when trace!=null && trace.tokens is an array;
@@ -53,19 +64,29 @@ declare module "linq-regex" {
 
         public parseUntil(...values: string[]): Parser<string>;
 
-        public empty<T>(): Parser<T>;
-        public true(): Parser<boolean>;
-        public false(): Parser<boolean>;
+        
         public endOfFile(): Parser<string>;
+        
+        public static empty<T>(): Parser<T>;
+        public static true(): Parser<boolean>;
+        public static false(): Parser<boolean>;
     }
 
-    export namespace LinqParser {
+    export namespace Parser {
 
         function all<T1, R>(p1: Parser<T1>, map: Func.Func1<T1, R>): Parser<R>;
         function all<T1, T2, R>(p1: Parser<T1>, p2: Parser<T2>, map: Func.Func2<T1, T2, R>): Parser<R>;
         function all<T1, T2, T3, R>(p1: Parser<T1>, p2: Parser<T2>, p3: Parser<T3>, map: Func.Func3<T1, T2, T3, R>): Parser<R>;
+        // ...
+
+        function all<T1, T2>(p1: Parser<T1>, p2: Parser<T2>): Parser<[T1, T2]>;
+        function all<T1, T2, T3>(p1: Parser<T1>, p2: Parser<T2>, p3: Parser<T3>): Parser<[T1, T2, T3]>;
+        // ...
 
         function all<T>(...parsers: Parser<T>[]): Parser<T[]>;
+
+        function many<T>(p: Parser<T>): Parser<T[]>;
+        function many<T, R>(p: Parser<T>, map: (arr: T[]) => R): Parser<R>;
 
         function any<T1, R>(
             p1: Parser<T1>, map1: Func.Func1<T1, R>): Parser<R>;
@@ -79,8 +100,7 @@ declare module "linq-regex" {
             p2: Parser<T2>, map2: Func.Func1<T2, R>,
             p3: Parser<T3>, map3: Func.Func1<T3, R>): Parser<R>;
 
-        function many<T>(p: Parser<T>): Parser<T>;
-        function many<T, R>(p: Parser<T>, map: (arr: T[]) => R): Parser<R>;
+        function any<T>(...parsers: Parser<T>[]): Parser<T>;
 
         function oneOrMore<T>(p: Parser<T>): Parser<T[]>;
         function oneOrMore<T, R>(p: Parser<T>, map: (arr: T[]) => R): Parser<R>;

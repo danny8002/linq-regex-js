@@ -243,7 +243,42 @@ describe("AdvancedParser-oneOrMore-tests", function () {
 
         // one alpha
         assert_.equal(obj3.isValid(), true);
+        assert_.strictEqual(Array.isArray(obj3.result), true);
         assert_.strictEqual(obj3.result[0], "a");
     })
 })
 
+
+describe("AdvancedParser-optional-tests", function () {
+
+    var alphaParser;
+
+    before("new Parser", function () {
+        var gen = new lib.ParserGenerator({ history: [] });
+        alphaParser = gen.regex("(\[a-z\])", "alpha");
+    })
+
+    it("advanced parser - optional", function () {
+        var defaultValue = "defaultValue";
+        var source = "abcdef";
+
+        var parser = lib.Parser.optional(alphaParser, defaultValue);
+
+        assert_.equal(libUtil.isParser(parser), true);
+
+        var obj = parser(source);
+
+        // found match
+        assert_.equal(obj instanceof lib.ParseData, true);
+        assert_.equal(obj.isValid(), true);
+        assert_.equal(obj.result, "a");
+
+        var s2 = "0abc";
+        var obj2 = parser(s2);
+
+        // no match
+        assert_.equal(obj2.isValid(), true);
+        assert_.strictEqual(obj2.result, defaultValue);
+        assert_.strictEqual(obj2.rest, s2);
+    })
+})

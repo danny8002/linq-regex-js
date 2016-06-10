@@ -177,3 +177,73 @@ describe("AdvancedParser-any-tests", function () {
         assert_.equal(obj.rest, source.substr(1));
     })
 })
+
+describe("AdvancedParser-oneOrMore-tests", function () {
+
+    var alphaParser;
+
+    before("new Parser", function () {
+        var gen = new lib.ParserGenerator({ history: [] });
+        alphaParser = gen.regex("(\[a-z\])", "alpha");
+    })
+
+    it("advanced parser - oneOrMore - with map", function () {
+        var source = "abcdef";
+
+        var parser = lib.Parser.oneOrMore(alphaParser, function map(ds) {
+            return ds.join("");
+        });
+
+        assert_.equal(libUtil.isParser(parser), true);
+
+        var obj = parser(source);
+
+        // return array of alpha
+        assert_.equal(obj instanceof lib.ParseData, true);
+        assert_.equal(obj.isValid(), true);
+        assert_.equal(obj.result, "abcdef");
+
+        var s2 = "0abc";
+        var obj2 = parser(s2);
+
+        // parse failure
+        assert_.equal(obj2.isValid(), false);
+
+        var s3 = "a09";
+        var obj3 = parser(s3);
+
+        // one alpha
+        assert_.equal(obj3.isValid(), true);
+        assert_.strictEqual(obj3.result, "a");
+    })
+
+
+    it("advanced parser - oneOrMore - without map", function () {
+        var source = "abcdef";
+
+        var parser = lib.Parser.oneOrMore(alphaParser);
+
+        assert_.equal(libUtil.isParser(parser), true);
+
+        var obj = parser(source);
+
+        // return array of alpha
+        assert_.equal(obj instanceof lib.ParseData, true);
+        assert_.equal(obj.isValid(), true);
+        assert_.equal(obj.result.length, source.length);
+
+        var s2 = "0abc";
+        var obj2 = parser(s2);
+
+        // parse failure
+        assert_.equal(obj2.isValid(), false);
+
+        var s3 = "a09";
+        var obj3 = parser(s3);
+
+        // one alpha
+        assert_.equal(obj3.isValid(), true);
+        assert_.strictEqual(obj3.result[0], "a");
+    })
+})
+

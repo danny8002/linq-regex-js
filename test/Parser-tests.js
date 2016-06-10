@@ -114,3 +114,50 @@ describe("AdvancedParser-many-tests", function () {
         assert_.strictEqual(obj.result[3], "4");
     })
 })
+
+describe("AdvancedParser-any-tests", function () {
+
+    var digitParser;
+    var alphaParser;
+
+    before("new Parser", function () {
+        var gen = new lib.ParserGenerator({ history: [] });
+        digitParser = gen.regex("(\\d)", "digit");
+        alphaParser = gen.regex("(\[a-z\])", "alpha");
+    })
+
+    it("advanced parser - any - with map", function () {
+        var source = "abcdef";
+
+        var parser = lib.Parser.any(digitParser, function map1(d) {
+            return "map1";
+        }, alphaParser, function map2(d) {
+            return "map2";
+        });
+
+        assert_.equal(libUtil.isParser(parser), true);
+
+        var obj = parser(source);
+
+        assert_.equal(obj instanceof lib.ParseData, true);
+        assert_.equal(obj.isValid(), true);
+        assert_.equal(obj.result, "map2");
+    })
+
+
+    it("advanced parser - all - without map", function () {
+
+        var source = "abcdef";
+
+        var parser = lib.Parser.any(digitParser, alphaParser);
+
+        assert_.equal(libUtil.isParser(parser), true);
+
+        var obj = parser(source);
+
+        assert_.equal(obj instanceof lib.ParseData, true);
+        assert_.equal(obj.isValid(), true);
+        assert_.equal(obj.result, "a");
+        assert_.equal(obj.rest, source.substr(1));
+    })
+})

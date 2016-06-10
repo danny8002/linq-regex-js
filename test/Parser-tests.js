@@ -48,6 +48,22 @@ describe("Parser-tests", function () {
         // failed in parsing value because whitespace before "Microsoft"
         assert_.equal(failureObj.isValid(), false);
         assert_.equal(failureObj.error.description, valueParserDesc);
+    })
 
+
+    it("advanced parser - all - no map", function () {
+        var source = "name=Microsoft dummy";
+
+        var parser = lib.Parser.all(keyParser, sepParser, valueParser);
+
+        assert_.equal(libUtil.isParser(parser), true);
+
+        var obj = parser(source);
+
+        assert_.equal(obj instanceof lib.ParseData, true);
+        assert_.equal(obj.isValid(), true);
+        assert_.strictEqual(obj.result[0], "name");
+        assert_.strictEqual(obj.result[1], undefined);
+        assert_.strictEqual(obj.result[2], "Microsoft");
     })
 })

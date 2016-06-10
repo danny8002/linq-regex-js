@@ -59,7 +59,7 @@ declare module "linq-regex" {
 
     export class ParserGenerator {
         constructor(context: ParserGeneratorContext);
-        public regex(pattern: string, description: string): Parser<string>;
+        public regex(pattern: string, description?: string): Parser<string>;
         public regex<T>(pattern: string, description: string, map: (token: string) => T): Parser<T>;
 
         public parseUntil(...values: string[]): Parser<string>;

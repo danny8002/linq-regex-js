@@ -12,6 +12,12 @@ describe("Package-tests", function () {
         assert_.equal(typeof lib.PrematureEndParseErrorData, "function");
         assert_.equal(typeof lib.AggregateParseErrorData, "function");
 
+
+        assert_.equal(typeof lib.ParserGenerator, "function");
+        assert_.equal(typeof lib.ParserGenerator.false, "function");
+        assert_.equal(typeof lib.ParserGenerator.true, "function");
+        assert_.equal(typeof lib.ParserGenerator.empty, "function");
+
         assert_.equal(typeof lib.Parser, "object");
         assert_.equal(typeof lib.Parser.all, "function");
         assert_.equal(typeof lib.Parser.any, "function");
